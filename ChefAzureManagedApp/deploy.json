@@ -191,13 +191,16 @@
                             "imagePublisher": {
                                 "type": "string"
                             },
-                            "registrationKey": {
+                            "validationClientName": {
                                 "type": "string"
                             },
-                            "registrationURI": {
+                            "validationKey": {
                                 "type": "string"
                             },
-                            "configName": {
+                            "chefServerURI": {
+                                "type": "string"
+                            },
+                            "runList": {
                                 "type": "string"
                             }
                         },
@@ -214,7 +217,7 @@
                             {
                                 "condition": "[equals(parameters('ImagePublisher'), 'MicrosoftWindowsServer')]",
                                 "type": "Microsoft.Compute/virtualMachines/extensions",
-                                "name": "[concat(parameters('vmName'),'/ChefClientWindows')]",
+                                "name": "[concat(parameters('vmName'),'/WindowsChefClient')]",
                                 "apiVersion": "2015-05-01-preview",
                                 "location": "[parameters('location')]",
                                 "properties": {
@@ -224,33 +227,38 @@
                                     "settings": {
                                         "bootstrap_options": {
                                             "chef_node_name": "parameters('vmName')",
-                                            "chef_server_url": "parameters('registrationURI')",
+                                            "chef_server_url": "parameters('chefServerURI')",
                                             "validation_client_name": "parameters('validationClientName')"
                                         },
                                         "runlist": "parameters('runList')",
-                                        "validation_key_format": "plaintext"
+                                        "validationKey_format": "plaintext"
                                     },
                                     "protectedSettings": {
-                                        "validation_key": "parameters('registrationKey')"
+                                        "validationKey": "parameters('validationKey')"
                                     }
                                 }
                             },
                             {
                                 "condition": "[contains(variables('linuxPublishers'), parameters('imagePublisher'))]",
                                 "type": "Microsoft.Compute/virtualMachines/extensions",
-                                "name": "[concat(parameters('vmName'),'/StateConfigurationLinux')]",
-                                "location": "[parameters('location')]",
+                                "name": "[concat(parameters('vmName'),'/LinuxChefClient')]",
                                 "apiVersion": "2015-05-01-preview",
+                                "location": "[parameters('location')]",
                                 "properties": {
-                                    "publisher": "Microsoft.OSTCExtensions",
-                                    "type": "DSCForLinux",
-                                    "typeHandlerVersion": "2.0",
+                                    "publisher": "Chef.Bootstrap.WindowsAzure",
+                                    "type": "LinuxChefClient",
+                                    "typeHandlerVersion": "1210.12",
                                     "settings": {
-                                        "Mode": "Register"
+                                        "bootstrap_options": {
+                                            "chef_node_name": "parameters('vmName')",
+                                            "chef_server_url": "parameters('chefServerURI')",
+                                            "validation_client_name": "parameters('validationClientName')"
+                                        },
+                                        "runlist": "parameters('runList')",
+                                        "validationKey_format": "plaintext"
                                     },
                                     "protectedSettings": {
-                                        "RegistrationURI": "[parameters('registrationURI')]",
-                                        "RegistrationKey": "[parameters('registrationKey')]"
+                                        "validationKey": "parameters('validationKey')"
                                     }
                                 }
                             }
@@ -266,14 +274,17 @@
                         "imagePublisher": {
                             "value": "[field('Microsoft.Compute/virtualMachines/imagePublisher')]"
                         },
-                        "registrationKey": {
-                            "value": "[parameters('registrationKey')]"
+                        "validationClientName": {
+                            "value": "[parameters('validationClientName')]"
                         },
-                        "registrationURI": {
-                            "value": "[parameters('registrationURI')]"
+                        "validationKey": {
+                            "value": "[parameters('validationKey')]"
                         },
-                        "configName": {
-                            "value": "[parameters('configName')]"
+                        "chefServerURI": {
+                            "value": "[parameters('chefServerURI')]"
+                        },
+                        "runList": {
+                            "value": "[parameters('runList')]"
                         }
                     }
                 }
