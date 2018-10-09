@@ -199,18 +199,6 @@
                             },
                             "configName": {
                                 "type": "string"
-                            },
-                            "ConfigurationMode": {
-                                "type": "string",
-                                "defaultValue": "ApplyandAutoCorrect"
-                            },
-                            "RebootNodeIfNeeded": {
-                                "type": "string",
-                                "defaultValue": "$true"
-                            },
-                            "ActionAfterReboot": {
-                                "type": "string",
-                                "defaultValue": "ContinueConfiguration"
                             }
                         },
                         "variables": {
