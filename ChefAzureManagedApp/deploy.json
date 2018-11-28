@@ -1,270 +1,308 @@
 {
-    "if": {
-        "allOf": [
-            {
-                "field": "type",
-                "equals": "Microsoft.Compute/virtualMachines"
-            },
-            {
-                "anyOf": [
-                    {
-                        "allOf": [
-                            {
-                                "field": "Microsoft.Compute/imagePublisher",
-                                "equals": "MicrosoftWindowsServer"
-                            },
-                            {
-                                "field": "Microsoft.Compute/imageOffer",
-                                "equals": "WindowsServer"
-                            },
-                            {
-                                "field": "Microsoft.Compute/imageSKU",
-                                "in": [
-                                    "2008-R2-SP1",
-                                    "2008-R2-SP1-smalldisk",
-                                    "2012-Datacenter",
-                                    "2012-Datacenter-smalldisk",
-                                    "2012-R2-Datacenter",
-                                    "2012-R2-Datacenter-smalldisk",
-                                    "2016-Datacenter",
-                                    "2016-Datacenter-Server-Core",
-                                    "2016-Datacenter-Server-Core-smalldisk",
-                                    "2016-Datacenter-smalldisk",
-                                    "2016-Datacenter-with-Containers",
-                                    "2016-Datacenter-with-RDSH"
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "allOf": [
-                            {
-                                "field": "Microsoft.Compute/imagePublisher",
-                                "equals": "Canonical"
-                            },
-                            {
-                                "field": "Microsoft.Compute/imageOffer",
-                                "equals": "UbuntuServer"
-                            },
-                            {
-                                "anyOf": [
-                                    {
-                                        "field": "Microsoft.Compute/imageSKU",
-                                        "match": "14.04.#-LTS"
-                                    },
-                                    {
-                                        "field": "Microsoft.Compute/imageSKU",
-                                        "match": "16.04.#-LTS"
-                                    },
-                                    {
-                                        "field": "Microsoft.Compute/imageSKU",
-                                        "match": "18.04.#-LTS"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "allOf": [
-                            {
-                                "field": "Microsoft.Compute/imagePublisher",
-                                "equals": "Suse"
-                            },
-                            {
-                                "field": "Microsoft.Compute/imageOffer",
-                                "equals": "SLES"
-                            },
-                            {
-                                "field": "Microsoft.Compute/imageSKU",
-                                "equals": "12-SP3"
-                            }
-                        ]
-                    },
-                    {
-                        "allOf": [
-                            {
-                                "field": "Microsoft.Compute/imagePublisher",
-                                "equals": "RedHat"
-                            },
-                            {
-                                "field": "Microsoft.Compute/imageOffer",
-                                "equals": "RHEL"
-                            },
-                            {
-                                "field": "Microsoft.Compute/imageSKU",
-                                "in": [
-                                    "7-RAW",
-                                    "7.4",
-                                    "7.2"
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "allOf": [
-                            {
-                                "field": "Microsoft.Compute/imagePublisher",
-                                "equals": "credativ"
-                            },
-                            {
-                                "field": "Microsoft.Compute/imageOffer",
-                                "equals": "Debian"
-                            },
-                            {
-                                "field": "Microsoft.Compute/imageSKU",
-                                "in": [
-                                    "9",
-                                    "8"
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "allOf": [
-                            {
-                                "field": "Microsoft.Compute/imagePublisher",
-                                "equals": "OpenLogic"
-                            },
-                            {
-                                "field": "Microsoft.Compute/imageOffer",
-                                "equals": "CentOS"
-                            },
-                            {
-                                "field": "Microsoft.Compute/imageSKU",
-                                "in": [
-                                    "7.5",
-                                    "7.4",
-                                    "7.3"
-                                ]
-                            }
-                        ]
-                    }
-                ]
+    "Properties": {
+      "policyType": "Custom",
+      "mode": "All",
+      "parameters": {
+        "validationClientName": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Validation Client Name",
+            "description": "",
+            "strongType": "valClientName"
+          }
+        },
+        "validationKey": {
+            "type": "String",
+            "metadata": {
+              "displayName": "Validation Key",
+              "description": "",
+              "strongType": "validationKey"
             }
-        ]
-    },
-    "then": {
-        "effect": "deployIfNotExists",
-        "details": {
-            "type": "Microsoft.Compute/virtualMachines/extensions",
-            "existenceCondition": {
-                "anyOf": [
-                    {
-                        "allOf": [
-                            {
-                                "field": "Microsoft.Compute/virtualMachines/extensions/publisher",
-                                "equals": "Microsoft.Powershell"
-                            },
-                            {
-                                "field": "Microsoft.Compute/virtualMachines/extensions/type",
-                                "equals": "DSC"
-                            }
-                        ]
-                    },
-                    {
-                        "allOf": [
-                            {
-                                "field": "Microsoft.Compute/virtualMachines/extensions/publisher",
-                                "equals": "Microsoft.OSTCExtensions"
-                            },
-                            {
-                                "field": "Microsoft.Compute/virtualMachines/extensions/type",
-                                "equals": "DSCforLinux"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "deployment": {
-                "properties": {
-                    "mode": "incremental",
-                    "template": {
-                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                        "contentVersion": "1.0.0.0",
-                        "parameters": {
-                            "vmName": {
-                                "type": "string"
-                            },
-                            "location": {
-                                "type": "string"
-                            },
-                            "imagePublisher": {
-                                "type": "string"
-                            },
-                            "validationClientName": {
-                                "type": "string"
-                            },
-                            "validationKey": {
-                                "type": "string"
-                            },
-                            "chefServerURI": {
-                                "type": "string"
-                            },
-                            "runList": {
-                                "type": "string"
-                            }
-                        },
-                        "variables": {
-                            "linuxPublishers": [
-                                "Canonical",
-                                "Suse",
-                                "RedHat",
-                                "credativ",
-                                "OpenLogic"
-                            ]
-                        },
-                        "resources": [
-                            {
-                                "condition": "[equals(parameters('ImagePublisher'), 'MicrosoftWindowsServer')]",
-                                "type": "Microsoft.Compute/virtualMachines/extensions",
-                                "name": "[concat(parameters('vmName'),'/WindowsChefClient')]",
-                                "apiVersion": "2015-05-01-preview",
-                                "location": "[parameters('location')]",
-                                "properties": {
-                                    "publisher": "Chef.Bootstrap.WindowsAzure",
-                                    "type": "ChefClient",
-                                    "typeHandlerVersion": "1210.12",
-                                    "settings": {
-                                        "bootstrap_options": {
-                                            "chef_node_name": "parameters('vmName')",
-                                            "chef_server_url": "parameters('chefServerURI')",
-                                            "validation_client_name": "parameters('validationClientName')"
-                                        },
-                                        "runlist": "parameters('runList')",
-                                        "validationKey_format": "plaintext"
-                                    },
-                                    "protectedSettings": {
-                                        "validationKey": "parameters('validationKey')"
-                                    }
-                                }
-                            },
-                            {
-                                "condition": "[contains(variables('linuxPublishers'), parameters('imagePublisher'))]",
-                                "type": "Microsoft.Compute/virtualMachines/extensions",
-                                "name": "[concat(parameters('vmName'),'/LinuxChefClient')]",
-                                "apiVersion": "2015-05-01-preview",
-                                "location": "[parameters('location')]",
-                                "properties": {
-                                    "publisher": "Chef.Bootstrap.WindowsAzure",
-                                    "type": "LinuxChefClient",
-                                    "typeHandlerVersion": "1210.12",
-                                    "settings": {
-                                        "bootstrap_options": {
-                                            "chef_node_name": "parameters('vmName')",
-                                            "chef_server_url": "parameters('chefServerURI')",
-                                            "validation_client_name": "parameters('validationClientName')"
-                                        },
-                                        "runlist": "parameters('runList')",
-                                        "validationKey_format": "plaintext"
-                                    },
-                                    "protectedSettings": {
-                                        "validationKey": "parameters('validationKey')"
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    "parameters": {
+          },
+          "chefServerURI": {
+            "type": "String",
+            "metadata": {
+              "displayName": "Chef Server URI",
+              "description": "",
+              "strongType": "chefServerURI"
+            }
+          },
+          "runList": {
+            "type": "String",
+            "metadata": {
+              "displayName": "Run List",
+              "description": "",
+              "strongType": "runList"
+            }
+          }
+      },
+      "policyRule": {
+        "if": {
+          "allOf": [
+              {
+                  "field": "type",
+                  "equals": "Microsoft.Compute/virtualMachines"
+              },
+              {
+                  "anyOf": [
+                      {
+                          "allOf": [
+                              {
+                                  "field": "Microsoft.Compute/imagePublisher",
+                                  "equals": "MicrosoftWindowsServer"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/imageOffer",
+                                  "equals": "WindowsServer"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/imageSKU",
+                                  "in": [
+                                      "2008-R2-SP1",
+                                      "2008-R2-SP1-smalldisk",
+                                      "2012-Datacenter",
+                                      "2012-Datacenter-smalldisk",
+                                      "2012-R2-Datacenter",
+                                      "2012-R2-Datacenter-smalldisk",
+                                      "2016-Datacenter",
+                                      "2016-Datacenter-Server-Core",
+                                      "2016-Datacenter-Server-Core-smalldisk",
+                                      "2016-Datacenter-smalldisk",
+                                      "2016-Datacenter-with-Containers",
+                                      "2016-Datacenter-with-RDSH"
+                                  ]
+                              }
+                          ]
+                      },
+                      {
+                          "allOf": [
+                              {
+                                  "field": "Microsoft.Compute/imagePublisher",
+                                  "equals": "Canonical"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/imageOffer",
+                                  "equals": "UbuntuServer"
+                              },
+                              {
+                                  "anyOf": [
+                                      {
+                                          "field": "Microsoft.Compute/imageSKU",
+                                          "match": "14.04.#-LTS"
+                                      },
+                                      {
+                                          "field": "Microsoft.Compute/imageSKU",
+                                          "match": "16.04.#-LTS"
+                                      },
+                                      {
+                                          "field": "Microsoft.Compute/imageSKU",
+                                          "match": "18.04.#-LTS"
+                                      }
+                                  ]
+                              }
+                          ]
+                      },
+                      {
+                          "allOf": [
+                              {
+                                  "field": "Microsoft.Compute/imagePublisher",
+                                  "equals": "Suse"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/imageOffer",
+                                  "equals": "SLES"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/imageSKU",
+                                  "equals": "12-SP3"
+                              }
+                          ]
+                      },
+                      {
+                          "allOf": [
+                              {
+                                  "field": "Microsoft.Compute/imagePublisher",
+                                  "equals": "RedHat"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/imageOffer",
+                                  "equals": "RHEL"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/imageSKU",
+                                  "in": [
+                                      "7-RAW",
+                                      "7.4",
+                                      "7.2"
+                                  ]
+                              }
+                          ]
+                      },
+                      {
+                          "allOf": [
+                              {
+                                  "field": "Microsoft.Compute/imagePublisher",
+                                  "equals": "credativ"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/imageOffer",
+                                  "equals": "Debian"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/imageSKU",
+                                  "in": [
+                                      "9",
+                                      "8"
+                                  ]
+                              }
+                          ]
+                      },
+                      {
+                          "allOf": [
+                              {
+                                  "field": "Microsoft.Compute/imagePublisher",
+                                  "equals": "OpenLogic"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/imageOffer",
+                                  "equals": "CentOS"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/imageSKU",
+                                  "in": [
+                                      "7.5",
+                                      "7.4",
+                                      "7.3"
+                                  ]
+                              }
+                          ]
+                      }
+                  ]
+              }
+          ]
+      },
+      "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+              "type": "Microsoft.Compute/virtualMachines/extensions",
+              "existenceCondition": {
+                  "anyOf": [
+                      {
+                          "allOf": [
+                              {
+                                  "field": "Microsoft.Compute/virtualMachines/extensions/publisher",
+                                  "equals": "Microsoft.Powershell"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/virtualMachines/extensions/type",
+                                  "equals": "DSC"
+                              }
+                          ]
+                      },
+                      {
+                          "allOf": [
+                              {
+                                  "field": "Microsoft.Compute/virtualMachines/extensions/publisher",
+                                  "equals": "Microsoft.OSTCExtensions"
+                              },
+                              {
+                                  "field": "Microsoft.Compute/virtualMachines/extensions/type",
+                                  "equals": "DSCforLinux"
+                              }
+                          ]
+                      }
+                  ]
+              },
+              "deployment": {
+                  "properties": {
+                      "mode": "incremental",
+                      "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "parameters": {
+                              "vmName": {
+                                  "type": "string"
+                              },
+                              "location": {
+                                  "type": "string"
+                              },
+                              "imagePublisher": {
+                                  "type": "string"
+                              },
+                              "validationClientName": {
+                                  "type": "string"
+                              },
+                              "validationKey": {
+                                  "type": "string"
+                              },
+                              "chefServerURI": {
+                                  "type": "string"
+                              },
+                              "runList": {
+                                  "type": "string"
+                              }
+                          },
+                          "variables": {
+                              "linuxPublishers": [
+                                  "Canonical",
+                                  "Suse",
+                                  "RedHat",
+                                  "credativ",
+                                  "OpenLogic"
+                              ]
+                          },
+                          "resources": [
+                              {
+                                  "condition": "[equals(parameters('ImagePublisher'), 'MicrosoftWindowsServer')]",
+                                  "type": "Microsoft.Compute/virtualMachines/extensions",
+                                  "name": "[concat(parameters('vmName'),'/WindowsChefClient')]",
+                                  "apiVersion": "2015-05-01-preview",
+                                  "location": "[parameters('location')]",
+                                  "properties": {
+                                      "publisher": "Chef.Bootstrap.WindowsAzure",
+                                      "type": "ChefClient",
+                                      "typeHandlerVersion": "1210.12",
+                                      "settings": {
+                                          "bootstrap_options": {
+                                              "chef_node_name": "parameters('vmName')",
+                                              "chef_server_url": "parameters('chefServerURI')",
+                                              "validation_client_name": "parameters('validationClientName')"
+                                          },
+                                          "runlist": "parameters('runList')",
+                                          "validationKey_format": "plaintext"
+                                      },
+                                      "protectedSettings": {
+                                          "validationKey": "parameters('validationKey')"
+                                      }
+                                  }
+                              },
+                              {
+                                  "condition": "[contains(variables('linuxPublishers'), parameters('imagePublisher'))]",
+                                  "type": "Microsoft.Compute/virtualMachines/extensions",
+                                  "name": "[concat(parameters('vmName'),'/LinuxChefClient')]",
+                                  "apiVersion": "2015-05-01-preview",
+                                  "location": "[parameters('location')]",
+                                  "properties": {
+                                      "publisher": "Chef.Bootstrap.WindowsAzure",
+                                      "type": "LinuxChefClient",
+                                      "typeHandlerVersion": "1210.12",
+                                      "settings": {
+                                          "bootstrap_options": {
+                                              "chef_node_name": "parameters('vmName')",
+                                              "chef_server_url": "parameters('chefServerURI')",
+                                              "validation_client_name": "parameters('validationClientName')"
+                                          },
+                                          "runlist": "parameters('runList')",
+                                          "validationKey_format": "plaintext"
+                                      },
+                                      "protectedSettings": {
+                                          "validationKey": "parameters('validationKey')"
+                                      }
+                                  }
+                              }
+                          ]
+                      },
+                      "parameters": {
                         "vmName": {
                             "value": "[field('name')]"
                         },
@@ -287,8 +325,15 @@
                             "value": "[parameters('runList')]"
                         }
                     }
-                }
-            }
+                  }
+              },
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ]
+          }
         }
+      }
     }
-}
+  
+  }
+  
